@@ -125,3 +125,43 @@ def excluir(tarefas: list, arq: str) -> None:
         print("✅ Excluída!")
     else:
         print("Operação cancelada.")
+
+# ===========================
+# MENU / INTERFACE
+# ===========================
+def menu() -> None:
+    print("\n" + "=" * 52)
+    print("   GERENCIADOR DE TAREFAS - SIMPLES (TXT)")
+    print("=" * 52)
+    print("1 - Adicionar tarefa")
+    print("2 - Listar tarefas")
+    print("3 - Concluir/Reabrir tarefa")
+    print("4 - Excluir tarefa")
+    print("0 - Sair")
+
+
+def programa() -> None:
+    arq = "tarefas.txt"
+    tarefas = carregar(arq)
+    while True:
+        menu()
+        opcao = input("Escolha: ").strip()
+        match opcao:
+            case "0":
+                print("Até mais! 👋")
+                break
+            case "1":
+                adicionar(tarefas, arq)
+            case "2":
+                listar(tarefas)
+            case "3":
+                alternar_status(tarefas, arq)
+            case "4":
+                excluir(tarefas, arq)
+            case _:
+                print("❌ Opção inválida.")
+
+# ===========================
+# EXECUÇÃO
+# ===========================
+programa()        
