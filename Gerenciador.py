@@ -52,3 +52,76 @@ def proximo_id(tarefas: list) -> str:
         except:
             pass
     return str(maior + 1)
+
+# ===========================
+# SUBALGORITMOS DE OPERAÇÃO
+# ===========================
+
+def listar(tarefas: list) -> None:
+    print("\n📋 Lista de tarefas")
+    if len(tarefas) == 0:
+        print("Nenhuma tarefa cadastrada.")
+        return
+    print("-" * 70)
+    print(f"{'ID':<4} {'Título':<30} {'Status':<12} Descrição")
+    print("-" * 70)
+    for t in tarefas:
+        status = "Concluída" if t[3] == "1" else "Pendente"
+        titulo = t[1]
+        if len(titulo) > 30:
+            titulo = titulo[:27] + "..."
+        print(f"{t[0]:<4} {titulo:<30} {status:<12} {t[2]}")
+    print("-" * 70)
+
+
+def adicionar(tarefas: list, arq: str) -> None:
+    print("\n➕ Adicionar tarefa")
+    while True:
+        titulo = input("Título: ").strip()
+        if titulo != "":
+            break
+        print("❌ Título não pode ser vazio.")
+    descricao = input("Descrição (opcional): ").strip()
+    nova = [proximo_id(tarefas), titulo, descricao, "0"]
+    tarefas.append(nova)
+    salvar(arq, tarefas)
+    print("✅ Tarefa adicionada!")
+
+
+def encontrar_indice_por_id(tarefas: list, tid: str) -> int:
+    for i in range(len(tarefas)):
+        if tarefas[i][0] == tid:
+            return i
+    return -1
+
+
+def alternar_status(tarefas: list, arq: str) -> None:
+    print("\n✔️ Concluir/Reabrir")
+    tid = input("ID da tarefa: ").strip()
+    idx = encontrar_indice_por_id(tarefas, tid)
+    if idx == -1:
+        print("❌ Tarefa não encontrada.")
+        return
+    if tarefas[idx][3] == "1":
+        tarefas[idx][3] = "0"
+        print("🔁 Tarefa reaberta.")
+    else:
+        tarefas[idx][3] = "1"
+        print("✅ Tarefa concluída.")
+    salvar(arq, tarefas)
+
+
+def excluir(tarefas: list, arq: str) -> None:
+    print("\n🗑️ Excluir tarefa")
+    tid = input("ID da tarefa: ").strip()
+    idx = encontrar_indice_por_id(tarefas, tid)
+    if idx == -1:
+        print("❌ Tarefa não encontrada.")
+        return
+    confirma = input(f"Excluir tarefa #{tid}? (s/N): ").lower().strip()
+    if confirma == "s":
+        tarefas.pop(idx)
+        salvar(arq, tarefas)
+        print("✅ Excluída!")
+    else:
+        print("Operação cancelada.")
